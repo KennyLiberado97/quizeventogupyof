@@ -1,9 +1,48 @@
 @import "tailwindcss";
 
+:root {
+  color-scheme: light;
+  --background: #021231;
+  --foreground: #f5f5f5;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
+  background-color: #021231;
+  color: #f5f5f5;
   background-image: url('/bg.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   background-repeat: no-repeat;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Force light colors for text that must be visible on dark background */
+h1, h2, h3, h4, h5, h6 {
+  color: #f5f5f5;
+}
+
+label {
+  color: #cbd5e1; /* slate-300 */
+}
+
+p {
+  color: #94a3b8; /* slate-400 */
+}
+
+/* Ensure inputs are always readable */
+input, select, textarea {
+  color: #f5f5f5 !important;
+  background-color: #021231 !important;
+}
+
+input::placeholder {
+  color: #475569 !important; /* slate-600 */
 }

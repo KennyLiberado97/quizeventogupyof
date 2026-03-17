@@ -49,7 +49,7 @@ export default function ReferralForm() {
         .eq('id', leadId);
 
       if (error) {
-        console.error('Erro Supabase:', error);
+        console.error('Erro Supabase:', error.message || String(error));
         setErrorMsg(`Erro ao salvar: ${error.message}`);
         // Continue navigation to prevent freezing if needed, 
         // but usually we want to show the error. 
@@ -62,7 +62,7 @@ export default function ReferralForm() {
         setSuccess(true);
       }
     } catch (error: any) {
-      console.error('Erro inesperado:', error);
+      console.error('Erro inesperado:', error?.message || String(error));
       setErrorMsg(`Erro inesperado: ${error.message || 'Tente novamente'}`);
       router.push('/candidatos');
     } finally {

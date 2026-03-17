@@ -18,9 +18,7 @@ export default function Home() {
   });
 
   const formatPhone = (value: string) => {
-    // Remove tudo que não é dígito
     const v = value.replace(/\D/g, '');
-    
     if (v.length === 0) return '';
     if (v.length <= 2) return `(${v}`;
     if (v.length <= 6) return `(${v.slice(0, 2)}) ${v.slice(2)}`;
@@ -30,7 +28,6 @@ export default function Home() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    
     setFormData({
       ...formData,
       [name]: (name === 'telefone' || name === 'telefone_indicado') ? formatPhone(value) : value
@@ -42,7 +39,6 @@ export default function Home() {
     setLoading(true);
 
     try {
-      // Check if Supabase is actually configured (not using placeholders)
       const isSupabaseConfigured = 
         process.env.NEXT_PUBLIC_SUPABASE_URL && 
         process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder-url.supabase.co' &&
@@ -50,10 +46,7 @@ export default function Home() {
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY !== 'placeholder-key';
 
       if (isSupabaseConfigured) {
-        // Gera o ID no próprio navegador para não precisar fazer um SELECT (que é bloqueado pelo RLS)
         const leadId = crypto.randomUUID();
-
-        // Save lead to Supabase
         const { error } = await supabase
           .from('leads')
           .insert([
@@ -69,26 +62,18 @@ export default function Home() {
           ]);
 
         if (error) {
-          console.error('Error saving lead:', error.message || 'Unknown error');
-          if (error.message?.includes('Failed to fetch')) {
-            alert('Erro de conexão: Não foi possível conectar ao banco de dados. Verifique:\n1. Sua internet\n2. Se o seu projeto no Supabase está PAUSADO (projetos gratuitos pausam após inatividade)\n3. Se há algum bloqueador de anúncios (adblocker) ativo.');
-          }
+          console.error('Error saving lead:', error.message || String(error));
         } else {
           localStorage.setItem('current_lead_id', leadId);
           localStorage.setItem('current_lead_email', formData.email);
         }
       }
       
-      // Clear the popup flag so it shows up for the new lead
       localStorage.removeItem('background_check_answered');
-      
       router.push('/candidatos');
     } catch (error: any) {
-      console.error('Unexpected error:', error?.message || 'Unknown error');
-      
-      // Clear the popup flag even on error, so they can still see it
+      console.error('Unexpected error:', error?.message || String(error));
       localStorage.removeItem('background_check_answered');
-      
       router.push('/candidatos');
     } finally {
       setLoading(false);
@@ -113,7 +98,7 @@ export default function Home() {
       <main className="flex-grow flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center space-y-3">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#f5f5f5] tracking-tight">
+            <h1 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
               Você sabe quem está contratando?
             </h1>
             <p className="text-slate-400 text-lg">
@@ -121,14 +106,14 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="bg-white/5 border border-white/10 p-8 rounded-xl shadow-2xl backdrop-blur-sm">
+          <div className="bg-[#0b1739] border border-white/10 p-8 rounded-xl shadow-2xl">
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-slate-300" htmlFor="nome">Nome completo</label>
+                <label className="block text-sm font-bold text-slate-300" htmlFor="nome">Nome completo</label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">👤</span>
                   <input 
-                    className="w-full pl-11 pr-4 py-3 bg-[#021231] border border-white/20 rounded-lg text-[#f5f5f5] placeholder:text-slate-600 focus:border-[#00a3ff] focus:ring-2 focus:ring-[#00a3ff]/20 outline-none transition-all" 
+                    className="w-full pl-11 pr-4 py-3 bg-[#021231] border border-white/20 rounded-lg text-white placeholder:text-slate-600 focus:border-[#00a3ff] outline-none transition-all" 
                     id="nome" 
                     name="nome" 
                     value={formData.nome}
@@ -141,11 +126,11 @@ export default function Home() {
               </div>
 
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-slate-300" htmlFor="email">E-mail corporativo</label>
+                <label className="block text-sm font-bold text-slate-300" htmlFor="email">E-mail corporativo</label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">✉️</span>
                   <input 
-                    className="w-full pl-11 pr-4 py-3 bg-[#021231] border border-white/20 rounded-lg text-[#f5f5f5] placeholder:text-slate-600 focus:border-[#00a3ff] focus:ring-2 focus:ring-[#00a3ff]/20 outline-none transition-all" 
+                    className="w-full pl-11 pr-4 py-3 bg-[#021231] border border-white/20 rounded-lg text-white placeholder:text-slate-600 focus:border-[#00a3ff] outline-none transition-all" 
                     id="email" 
                     name="email" 
                     value={formData.email}
@@ -158,11 +143,11 @@ export default function Home() {
               </div>
 
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-slate-300" htmlFor="empresa">Empresa</label>
+                <label className="block text-sm font-bold text-slate-300" htmlFor="empresa">Empresa</label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">🏢</span>
                   <input 
-                    className="w-full pl-11 pr-4 py-3 bg-[#021231] border border-white/20 rounded-lg text-[#f5f5f5] placeholder:text-slate-600 focus:border-[#00a3ff] focus:ring-2 focus:ring-[#00a3ff]/20 outline-none transition-all" 
+                    className="w-full pl-11 pr-4 py-3 bg-[#021231] border border-white/20 rounded-lg text-white placeholder:text-slate-600 focus:border-[#00a3ff] outline-none transition-all" 
                     id="empresa" 
                     name="empresa" 
                     value={formData.empresa}
@@ -175,11 +160,11 @@ export default function Home() {
               </div>
 
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-slate-300" htmlFor="telefone">Telefone / WhatsApp</label>
+                <label className="block text-sm font-bold text-slate-300" htmlFor="telefone">Telefone / WhatsApp</label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">📞</span>
                   <input 
-                    className="w-full pl-11 pr-4 py-3 bg-[#021231] border border-white/20 rounded-lg text-[#f5f5f5] placeholder:text-slate-600 focus:border-[#00a3ff] focus:ring-2 focus:ring-[#00a3ff]/20 outline-none transition-all" 
+                    className="w-full pl-11 pr-4 py-3 bg-[#021231] border border-white/20 rounded-lg text-white placeholder:text-slate-600 focus:border-[#00a3ff] outline-none transition-all" 
                     id="telefone" 
                     name="telefone" 
                     value={formData.telefone}
@@ -193,7 +178,7 @@ export default function Home() {
 
               <div className="pt-4 border-t border-white/10">
                 <div className="mb-4">
-                  <h3 className="text-sm font-semibold text-slate-300 flex items-center gap-2">
+                  <h3 className="text-sm font-bold text-slate-300 flex items-center gap-2">
                     <span>🎁</span> Não é você quem cuida dessa área na empresa?
                   </h3>
                   <p className="text-xs text-slate-400 mt-1">
@@ -203,11 +188,11 @@ export default function Home() {
                 
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="block text-xs font-medium text-slate-400" htmlFor="email_indicado">E-mail do indicado</label>
+                    <label className="block text-xs font-bold text-slate-400" htmlFor="email_indicado">E-mail do indicado</label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">✉️</span>
                       <input 
-                        className="w-full pl-10 pr-4 py-2 bg-[#021231] border border-white/10 rounded-lg text-[#f5f5f5] placeholder:text-slate-600 focus:border-[#00a3ff] outline-none transition-all text-sm" 
+                        className="w-full pl-10 pr-4 py-2 bg-[#021231] border border-white/10 rounded-lg text-white placeholder:text-slate-600 focus:border-[#00a3ff] outline-none transition-all text-sm" 
                         id="email_indicado" 
                         name="email_indicado" 
                         value={formData.email_indicado}
@@ -219,11 +204,11 @@ export default function Home() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-xs font-medium text-slate-400" htmlFor="telefone_indicado">WhatsApp do indicado</label>
+                    <label className="block text-xs font-bold text-slate-400" htmlFor="telefone_indicado">WhatsApp do indicado</label>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">📱</span>
                       <input 
-                        className="w-full pl-10 pr-4 py-2 bg-[#021231] border border-white/10 rounded-lg text-[#f5f5f5] placeholder:text-slate-600 focus:border-[#00a3ff] outline-none transition-all text-sm" 
+                        className="w-full pl-10 pr-4 py-2 bg-[#021231] border border-white/10 rounded-lg text-white placeholder:text-slate-600 focus:border-[#00a3ff] outline-none transition-all text-sm" 
                         id="telefone_indicado" 
                         name="telefone_indicado" 
                         value={formData.telefone_indicado}
@@ -237,7 +222,7 @@ export default function Home() {
               </div>
 
               <button 
-                className="w-full py-4 bg-[#00a3ff] hover:bg-[#00a3ff]/90 text-[#f5f5f5] font-bold rounded-lg shadow-lg shadow-[#00a3ff]/20 transition-all flex items-center justify-center gap-2 group disabled:opacity-70" 
+                className="w-full py-4 bg-[#00a3ff] hover:bg-[#00a3ff]/90 text-white font-bold rounded-lg shadow-lg shadow-[#00a3ff]/20 transition-all flex items-center justify-center gap-2 group disabled:opacity-70" 
                 type="submit"
                 disabled={loading}
               >

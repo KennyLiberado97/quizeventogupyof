@@ -63,7 +63,7 @@ export default function CandidatosList() {
           } else if (updateRes?.data && updateRes.data.length === 0) {
             console.warn('⚠️ Nenhuma linha foi atualizada no Supabase! Isso geralmente acontece porque falta a permissão de SELECT no RLS (Row Level Security). O banco bloqueia a busca do registro antes de atualizar.');
           } else {
-            console.log('✅ Resposta do background check salva com sucesso:', updateRes?.data);
+            console.log('✅ Resposta do background check salva com sucesso');
           }
         } else {
           console.warn('Nenhum dado de lead encontrado para atualizar.');
@@ -72,8 +72,8 @@ export default function CandidatosList() {
       
       localStorage.setItem('background_check_answered', 'true');
       setShowPopup(false);
-    } catch (error) {
-      console.error('Unexpected error:', error);
+    } catch (error: any) {
+      console.error('Unexpected error:', error?.message || String(error));
       setShowPopup(false);
     } finally {
       setIsSubmitting(false);
@@ -98,12 +98,12 @@ export default function CandidatosList() {
   };
 
   return (
-    <div className="bg-transparent text-slate-100 min-h-screen flex flex-col relative">
+    <div className="bg-transparent text-[#f5f5f5] min-h-screen flex flex-col relative">
       {/* Popup Modal */}
       {showPopup && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl p-8 max-w-sm w-full shadow-2xl border border-slate-200 flex flex-col items-center text-center">
-            <h3 className="text-[#021231] text-xl font-bold leading-tight mb-6">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4">
+          <div className="bg-[#f5f5f5] rounded-2xl p-8 max-w-sm w-full shadow-2xl border border-slate-200 flex flex-col items-center text-center">
+            <h3 className="!text-[#021231] text-xl font-extrabold leading-tight mb-6">
               Hoje você já usa alguma ferramenta para verificar o histórico e antecedentes dos seus candidatos?
             </h3>
             
@@ -144,7 +144,7 @@ export default function CandidatosList() {
       )}
 
       {/* Header Navigation */}
-      <header className="w-full border-b border-white/10 bg-[#021231]/80 backdrop-blur-md sticky top-0 z-50">
+      <header className="w-full border-b border-white/10 bg-[#021231] sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="text-white flex size-10 items-center justify-center cursor-pointer hover:bg-white/10 rounded-full transition-colors">
             <span className="text-xl">⬅️</span>
@@ -167,8 +167,8 @@ export default function CandidatosList() {
       <main className="flex-1 overflow-y-auto px-4 py-6 max-w-md mx-auto w-full pb-24">
         {/* Title Section */}
         <div className="text-center mb-8">
-          <h2 className="text-white text-3xl font-bold leading-tight mb-3">Você está procurando uma pessoa inovadora para seu time comercial.</h2>
-          <p className="text-slate-400 text-sm leading-relaxed">
+          <h2 className="text-[#f5f5f5] text-3xl font-bold leading-tight mb-3">Você está procurando uma pessoa inovadora para seu time comercial.</h2>
+          <p className="text-[#94a3b8] text-sm leading-relaxed">
             Escolha o candidato com base em sua aparência e experiência.
           </p>
         </div>
@@ -176,7 +176,7 @@ export default function CandidatosList() {
         {/* Candidate Cards Container */}
         <div className="space-y-4">
           {candidates.map((candidate) => (
-            <div key={candidate.id} className="bg-slate-50 dark:bg-slate-800/50 rounded-xl overflow-hidden shadow-xl border border-slate-200 dark:border-slate-700">
+            <div key={candidate.id} className="bg-[#0b1739]/90 rounded-xl overflow-hidden shadow-xl border border-white/10">
               <div className="p-5 flex flex-col gap-4">
                 <div className="flex items-center gap-4">
                   <div className="relative size-20 rounded-full overflow-hidden border-2 border-[#00a3ff] shrink-0">
@@ -189,22 +189,22 @@ export default function CandidatosList() {
                     />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-[#021231] dark:text-white text-xl font-bold">{candidate.name}</h3>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm font-medium mb-3">{candidate.role} {candidate.experience} de experiência</p>
+                    <h3 className="text-white text-xl font-bold">{candidate.name}</h3>
+                    <p className="text-slate-400 text-sm font-medium mb-3">{candidate.role} {candidate.experience} de experiência</p>
                   </div>
                 </div>
                 
                 <div className="flex gap-2 w-full">
                   <button 
                     onClick={() => toggleResume(candidate.id)}
-                    className="flex-1 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-800 dark:text-white font-bold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
                   >
                     <span>Ver Currículo</span>
                     <span className="text-sm">{expandedResume === candidate.id ? '⬆️' : '⬇️'}</span>
                   </button>
                   <button 
                     onClick={() => router.push(`/candidatos/${candidate.id}/alerta`)}
-                    className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 bg-[#22c55e] hover:bg-[#16a34a] text-white font-bold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2"
                   >
                     <span>CONTRATAR</span>
                     <span className="text-sm">🤝</span>
@@ -213,14 +213,14 @@ export default function CandidatosList() {
 
                 {/* Expanded Resume Section */}
                 {expandedResume === candidate.id && (
-                  <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <div className="mt-4 pt-4 border-t border-white/10 animate-in fade-in slide-in-from-top-2 duration-300">
                     <div className="space-y-4">
                       {/* Summary */}
                       <div>
-                        <h4 className="text-[#021231] dark:text-white font-bold mb-2 flex items-center gap-2">
+                        <h4 className="text-white font-bold mb-2 flex items-center gap-2">
                           <span className="text-[#00a3ff]">👤</span> Resumo Profissional
                         </h4>
-                        <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                        <p className="text-slate-300 text-sm leading-relaxed">
                           {candidate.summary}
                         </p>
                       </div>
@@ -228,7 +228,7 @@ export default function CandidatosList() {
                       {/* More Details Button */}
                       <button 
                         onClick={() => toggleDetails(candidate.id)}
-                        className="w-full py-2 bg-slate-200/50 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-700 text-[#00a3ff] font-bold rounded-lg transition-colors flex items-center justify-center gap-2 text-xs"
+                        className="w-full py-2 bg-white/5 hover:bg-white/10 text-[#00a3ff] font-bold rounded-lg transition-colors flex items-center justify-center gap-2 text-xs"
                       >
                         <span>{expandedDetails === candidate.id ? 'Ver menos detalhes' : 'Ver mais detalhes'}</span>
                         <span>{expandedDetails === candidate.id ? '⬆️' : '⬇️'}</span>
@@ -238,17 +238,17 @@ export default function CandidatosList() {
                         <div className="space-y-6 animate-in fade-in slide-in-from-top-2 duration-300 pt-2">
                           {/* Experience */}
                           <div>
-                            <h4 className="text-[#021231] dark:text-white font-bold mb-3 flex items-center gap-2">
+                            <h4 className="text-white font-bold mb-3 flex items-center gap-2">
                               <span className="text-[#00a3ff]">💼</span> Experiência Profissional
                             </h4>
                             <div className="space-y-4">
                               {candidate.experiences.map((exp, index) => (
                                 <div key={index} className="relative pl-4 border-l-2 border-[#00a3ff]/30">
-                                  <div className={`absolute -left-[5px] top-1 w-2 h-2 rounded-full ${index === 0 ? 'bg-[#00a3ff]' : 'bg-slate-400 dark:bg-slate-600'}`}></div>
-                                  <p className={`${index === 0 ? 'text-[#00a3ff]' : 'text-slate-500 dark:text-slate-400'} font-bold text-xs mb-1`}>{exp.period}</p>
-                                  <h5 className="text-[#021231] dark:text-white font-bold text-sm">{exp.role}</h5>
-                                  <p className="text-slate-500 dark:text-slate-400 text-xs font-medium mb-1">{exp.company}</p>
-                                  <ul className="text-slate-600 dark:text-slate-300 text-xs space-y-1 list-disc ml-4">
+                                  <div className={`absolute -left-[5px] top-1 w-2 h-2 rounded-full ${index === 0 ? 'bg-[#00a3ff]' : 'bg-slate-400'}`}></div>
+                                  <p className={`${index === 0 ? 'text-[#00a3ff]' : 'text-slate-500'} font-bold text-xs mb-1`}>{exp.period}</p>
+                                  <h5 className="text-white font-bold text-sm">{exp.role}</h5>
+                                  <p className="text-slate-400 text-xs font-medium mb-1">{exp.company}</p>
+                                  <ul className="text-slate-300 text-xs space-y-1 list-disc ml-4">
                                     {exp.achievements.map((ach, i) => (
                                       <li key={i}>{ach}</li>
                                     ))}
@@ -260,15 +260,15 @@ export default function CandidatosList() {
 
                           {/* Education */}
                           <div>
-                            <h4 className="text-[#021231] dark:text-white font-bold mb-3 flex items-center gap-2">
+                            <h4 className="text-white font-bold mb-3 flex items-center gap-2">
                               <span className="text-[#00a3ff]">🎓</span> Formação Acadêmica
                             </h4>
                             <div className="space-y-3">
                               {candidate.education.map((edu, index) => (
-                                <div key={index} className="bg-white dark:bg-slate-900/50 rounded-lg p-3 border border-slate-200 dark:border-slate-700">
-                                  <h5 className="text-[#021231] dark:text-white font-bold text-sm">{edu.degree}</h5>
-                                  <p className="text-slate-600 dark:text-slate-400 text-xs">{edu.institution}</p>
-                                  <p className="text-slate-500 dark:text-slate-500 text-xs mt-1">{edu.period}</p>
+                                <div key={index} className="bg-white/5 rounded-lg p-3 border border-white/10">
+                                  <h5 className="text-white font-bold text-sm">{edu.degree}</h5>
+                                  <p className="text-slate-400 text-xs">{edu.institution}</p>
+                                  <p className="text-slate-500 text-xs mt-1">{edu.period}</p>
                                 </div>
                               ))}
                             </div>
@@ -276,7 +276,7 @@ export default function CandidatosList() {
 
                           {/* Skills */}
                           <div>
-                            <h4 className="text-[#021231] dark:text-white font-bold mb-3 flex items-center gap-2">
+                            <h4 className="text-white font-bold mb-3 flex items-center gap-2">
                               <span className="text-[#00a3ff]">⚡</span> Habilidades
                             </h4>
                             <div className="flex flex-wrap gap-2">

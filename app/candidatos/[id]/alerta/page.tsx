@@ -14,8 +14,8 @@ export default async function VerificationAlert({ params }: { params: Promise<{ 
   return (
     <div className="relative flex min-h-screen w-full max-w-[480px] mx-auto flex-col bg-transparent overflow-x-hidden">
       {/* Header */}
-      <div className="flex items-center p-4 justify-between border-b border-slate-700/50">
-        <Link href="/candidatos" className="text-slate-100 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-700/30 transition-colors">
+      <div className="flex items-center p-4 justify-between border-b border-white/10 bg-[#021231]">
+        <Link href="/candidatos" className="text-[#f5f5f5] flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-white/10 transition-colors">
           <span className="text-xl">⬅️</span>
         </Link>
         <div className="flex-1 flex justify-center">
@@ -36,7 +36,7 @@ export default async function VerificationAlert({ params }: { params: Promise<{ 
       {/* Candidate Profile */}
       <div className="flex p-6 flex-col items-center">
         <div className="relative">
-          <div className="relative aspect-square rounded-full h-32 w-32 border-4 border-slate-700/50 shadow-xl overflow-hidden">
+          <div className="relative aspect-square rounded-full h-32 w-32 border-4 border-white/10 shadow-xl overflow-hidden">
             <Image 
               src={candidate.photo} 
               alt={`Foto de ${candidate.name}`} 
@@ -50,7 +50,7 @@ export default async function VerificationAlert({ params }: { params: Promise<{ 
           </div>
         </div>
         <div className="flex flex-col items-center justify-center mt-4">
-          <p className="text-slate-100 text-2xl font-bold leading-tight tracking-[-0.015em] text-center">{candidate.name}</p>
+          <p className="text-white text-2xl font-bold leading-tight tracking-[-0.015em] text-center">{candidate.name}</p>
           <p className="text-slate-400 text-base font-medium leading-normal text-center">Candidato em Seleção</p>
         </div>
       </div>
@@ -59,7 +59,7 @@ export default async function VerificationAlert({ params }: { params: Promise<{ 
       <div className="px-6 py-4">
         <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-5 text-center">
           <span className="text-red-500 text-4xl mb-2 block">🚨</span>
-          <h3 className="text-slate-100 tracking-tight text-xl font-bold leading-tight mb-2">Alerta de Verificação de Antecedentes</h3>
+          <h3 className="text-white tracking-tight text-xl font-bold leading-tight mb-2">Alerta de Verificação de Antecedentes</h3>
           <p className="text-slate-300 text-sm font-normal leading-relaxed">Foram encontradas <span className="text-red-400 font-semibold">{candidate.alert.type}</span> nos registros deste candidato que exigem atenção imediata.</p>
         </div>
       </div>
@@ -68,23 +68,25 @@ export default async function VerificationAlert({ params }: { params: Promise<{ 
       <div className="px-6 py-4 space-y-3">
         <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2 px-1">Pontos de Atenção Identificados</p>
         
-        <div className="flex items-center gap-4 bg-slate-800/40 p-4 rounded-xl border border-slate-700/30">
+        <div className="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
           <div className="size-10 rounded-lg bg-orange-500/20 flex items-center justify-center shrink-0">
             <span className="text-orange-500 text-xl">⚖️</span>
           </div>
           <div className="flex-1">
-            <p className="text-slate-100 font-semibold">Processos Judiciais</p>
+            <p className="text-white font-semibold">Processos Judiciais</p>
             <p className="text-slate-400 text-xs">{candidate.alert.judicial.count} {candidate.alert.judicial.description}</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-4 bg-slate-800/40 p-4 rounded-xl border border-slate-700/30">
-          <div className="size-10 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0">
-            <span className="text-red-500 text-xl">🔄</span>
+        <div className="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10">
+          <div className={`size-10 rounded-lg flex items-center justify-center shrink-0 ${
+            candidate.alert.turnover.status === 'Crítico' ? 'bg-red-500/20' : 'bg-green-500/40'
+          }`}>
+            <span className={`${candidate.alert.turnover.status === 'Crítico' ? 'text-red-500' : 'text-green-500'} text-xl`}>🔄</span>
           </div>
           <div className="flex-1">
-            <p className="text-slate-100 font-semibold">Turnover Empresarial</p>
-            <p className="text-slate-400 text-xs">Média de {(candidate.alert as any).turnover.average} (Status: {(candidate.alert as any).turnover.status})</p>
+            <p className="text-white font-semibold">Turnover Empresarial</p>
+            <p className="text-slate-400 text-xs">Média de {(candidate.alert as any).turnover.average} (Status: <span className={candidate.alert.turnover.status === 'Crítico' ? 'text-red-400' : 'text-green-500 font-bold'}>{candidate.alert.turnover.status}</span>)</p>
           </div>
         </div>
       </div>
